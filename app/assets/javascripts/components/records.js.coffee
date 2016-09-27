@@ -6,12 +6,19 @@
   getDefaultProps: ->
     records: []
 
+  addRecord: (record) ->
+    records = @state.records.slice()
+    records.push record
+    @setState records: records
+
   render: ->
     React.DOM.div
       className: 'records'
       React.DOM.h2
         className: 'title'
         'Records'
+      React.createElement RecordForm, handleNewRecord: @addRecord
+      React.DOM.hr null
       React.DOM.table
         className: 'table table-bordered'
         React.DOM.thead null,
@@ -21,3 +28,17 @@
         React.DOM.tbody null,
           for record in @state.records
             React.createElement Record, key: record.id, record: record
+
+  credits: ->
+    credits = @state.records.filter (val) -> val.amount >= 0
+    credits.reduce ((prev, curr) ->
+      prev + parseFloat(curr.amount)
+    ), 0
+  debits: ->
+    debits = @state.records.filter (val) -> val.amount < 0
+    debits.reduce ((prev, curr) ->
+      prev + parseFloat(curr.amount)
+    ), 0
+  balance: ->
+    @debits() + @credits()
+    

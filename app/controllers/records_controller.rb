@@ -5,7 +5,6 @@ class RecordsController < ApplicationController
 
   def create
     @record = Record.new(record_params)
-
     if @record.save
       render json: @record
     else
